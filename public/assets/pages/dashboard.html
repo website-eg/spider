@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../style/dashboard.css" />
+    <title>لوحة تحكم Spider Gym</title>
+  </head>
+  <body>
+    <header>
+      <h1>لوحة تحكم Spider Gym</h1>
+    </header>
+
+    <nav>
+      <a href="#services">الخدمات</a>
+      <a href="#trainers">المدربون</a>
+      <a href="#testimonials">آراء العملاء</a>
+      <a href="#subscriptions">الاشتراك</a>
+    </nav>
+
+    <section id="services">
+      <div class="section-title">الخدمات</div>
+      <div class="section-content">
+        <form>
+          <input type="text" placeholder="اسم الخدمة" />
+          <textarea placeholder="وصف الخدمة"></textarea>
+          <button type="submit">إضافة الخدمة</button>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>اسم الخدمة</th>
+              <th>الوصف</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>ساونا</td>
+              <td>جلسة ساونا لمدة 30 دقيقة</td>
+              <td class="action-buttons">
+                <button>تعديل</button>
+                <button>حذف</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="trainers">
+      <div class="section-title">المدربون</div>
+      <div class="section-content">
+        <form>
+          <input type="text" placeholder="اسم المدرب" />
+          <input type="text" placeholder="التخصص (مثلاً: كارديو)" />
+          <button type="submit">إضافة مدرب</button>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الاسم</th>
+              <th>التخصص</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>كابتن ماجد</td>
+              <td>كارديو</td>
+              <td class="action-buttons">
+                <button>تعديل</button>
+                <button>حذف</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="testimonials">
+      <div class="section-title">آراء العملاء</div>
+      <div class="section-content">
+        <form>
+          <input type="text" placeholder="اسم العميل" />
+          <textarea placeholder="رأيه عن الجيم أو المدرب"></textarea>
+          <button type="submit">إضافة الرأي</button>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الاسم</th>
+              <th>الرأي</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>ليلى</td>
+              <td>الجيم ممتاز والمدرب محترم جدًا</td>
+              <td class="action-buttons">
+                <button>تعديل</button>
+                <button>حذف</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="subscriptions">
+      <div class="section-title">خطط الاشتراك</div>
+      <div class="section-content">
+        <form>
+          <input type="text" placeholder="اسم الخطة (مثلاً: شهر واحد)" />
+          <input type="number" placeholder="السعر بالجنيه" />
+          <textarea placeholder="وصف الخطة (اختياري)"></textarea>
+          <button type="submit">إضافة الخطة</button>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الخطة</th>
+              <th>السعر</th>
+              <th>الوصف</th>
+              <th>الإجراءات</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>شهر واحد</td>
+              <td>300</td>
+              <td>اشتراك شهري يشمل كل الخدمات</td>
+              <td class="action-buttons">
+                <button>تعديل</button>
+                <button>حذف</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </body>
+</html>
