@@ -6,6 +6,7 @@ body {
       justify-content: center;
       height: 100vh;
       margin: 0;
+      padding: 15px;
     }
 
     .thank-you-container {
@@ -19,7 +20,7 @@ body {
     }
 
     .thank-you-container img {
-      width: 120px;
+      width: 200px;
       margin-bottom: 20px;
     }
 
