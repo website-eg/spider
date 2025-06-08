@@ -15,13 +15,14 @@
       <a href="#services">الخدمات</a>
       <a href="#trainers">المدربون</a>
       <a href="#testimonials">آراء العملاء</a>
+      <a href="#lastnews">آخر الأخبار</a>
       <a href="#subscriptions">الاشتراك</a>
     </nav>
 
     <section id="services">
       <div class="section-title">الخدمات</div>
       <div class="section-content">
-        <form>
+        <form id="services-form">
           <input type="text" placeholder="اسم الخدمة" />
           <textarea placeholder="وصف الخدمة"></textarea>
           <button type="submit">إضافة الخدمة</button>
@@ -35,17 +36,7 @@
               <th>الإجراءات</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>ساونا</td>
-              <td>جلسة ساونا لمدة 30 دقيقة</td>
-              <td class="action-buttons">
-                <button>تعديل</button>
-                <button>حذف</button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </section>
@@ -53,9 +44,10 @@
     <section id="trainers">
       <div class="section-title">المدربون</div>
       <div class="section-content">
-        <form>
+        <form id="trainers-form">
           <input type="text" placeholder="اسم المدرب" />
           <input type="text" placeholder="التخصص (مثلاً: كارديو)" />
+          <input type="text" placeholder="رابط صورة المدرب (URL)" />
           <button type="submit">إضافة مدرب</button>
         </form>
         <table>
@@ -64,20 +56,11 @@
               <th>#</th>
               <th>الاسم</th>
               <th>التخصص</th>
+              <th>الصورة</th>
               <th>الإجراءات</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>كابتن ماجد</td>
-              <td>كارديو</td>
-              <td class="action-buttons">
-                <button>تعديل</button>
-                <button>حذف</button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </section>
@@ -85,7 +68,7 @@
     <section id="testimonials">
       <div class="section-title">آراء العملاء</div>
       <div class="section-content">
-        <form>
+        <form id="testimonials-form">
           <input type="text" placeholder="اسم العميل" />
           <textarea placeholder="رأيه عن الجيم أو المدرب"></textarea>
           <button type="submit">إضافة الرأي</button>
@@ -99,17 +82,31 @@
               <th>الإجراءات</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="lastnews">
+      <div class="section-title">آخر الأخبار</div>
+      <div class="section-content">
+        <form id="lastnews-form">
+          <input type="text" placeholder="عنوان الخبر" />
+          <textarea placeholder="وصف الخبر"></textarea>
+          <input type="text" placeholder="رابط الخبر" />
+          <button type="submit">إضافة خبر</button>
+        </form>
+        <table>
+          <thead>
             <tr>
-              <td>1</td>
-              <td>ليلى</td>
-              <td>الجيم ممتاز والمدرب محترم جدًا</td>
-              <td class="action-buttons">
-                <button>تعديل</button>
-                <button>حذف</button>
-              </td>
+              <th>#</th>
+              <th>العنوان</th>
+              <th>الوصف</th>
+              <th>رابط الخبر</th>
+              <th>الإجراءات</th>
             </tr>
-          </tbody>
+          </thead>
+          <tbody></tbody>
         </table>
       </div>
     </section>
@@ -117,10 +114,12 @@
     <section id="subscriptions">
       <div class="section-title">خطط الاشتراك</div>
       <div class="section-content">
-        <form>
+        <form id="subscriptions-form">
           <input type="text" placeholder="اسم الخطة (مثلاً: شهر واحد)" />
           <input type="number" placeholder="السعر بالجنيه" />
-          <textarea placeholder="وصف الخطة (اختياري)"></textarea>
+          <input type="text" placeholder="وصف الخطة">
+          <input type="text" placeholder="وصف الخطة">
+          <input type="text" placeholder="وصف الخطة">
           <button type="submit">إضافة الخطة</button>
         </form>
         <table>
@@ -129,24 +128,17 @@
               <th>#</th>
               <th>الخطة</th>
               <th>السعر</th>
-              <th>الوصف</th>
+              <th>1 - وصف</th>
+              <th>2 - وصف</th>
+              <th>3 - وصف</th>
               <th>الإجراءات</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>شهر واحد</td>
-              <td>300</td>
-              <td>اشتراك شهري يشمل كل الخدمات</td>
-              <td class="action-buttons">
-                <button>تعديل</button>
-                <button>حذف</button>
-              </td>
-            </tr>
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </section>
+
+    <script src="../js/dashboard.js"></script>
   </body>
 </html>

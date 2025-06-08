@@ -25,6 +25,7 @@
           <li><a href="#blog">آخر الأخبار</a></li>
           <li><a href="#subscription">الاشتراك</a></li>
           <li><a href="#contact">تواصل</a></li>
+          <li><a href="assets/pages/login.html">تسجيل الدخول</a></li>
         </ul>
       </div>
     </nav>
@@ -40,73 +41,24 @@
     <section id="services" class="services section-padding">
       <div class="container">
         <h2>خدماتنا</h2>
-        <div class="service-cards">
-          <div class="card">
-            <h3>تدريب شخصي</h3>
-            <p>برامج تدريبية مخصصة تناسب أهدافك الشخصية.</p>
-          </div>
-          <div class="card">
-            <h3>تمارين جماعية</h3>
-            <p>جلسات ممتعة مع مدربين محترفين ومجموعة داعمة.</p>
-          </div>
-          <div class="card">
-            <h3>تغذية صحية</h3>
-            <p>خطط تغذية متوازنة لتحسين أدائك الصحي.</p>
-          </div>
-        </div>
+        <div class="service-cards" id="service-cards"></div>
       </div>
     </section>
 
     <section id="trainers" class="trainers section-padding">
       <div class="container">
         <h2>مدربونا</h2>
-        <div class="trainers-grid">
-          <div class="trainer">
-            <img
-              src="https://randomuser.me/api/portraits/men/32.jpg"
-              alt="مدرب 1"
-            />
-            <h4>أحمد علي</h4>
-            <p>خبير في بناء العضلات والكارديو</p>
-          </div>
-          <div class="trainer">
-            <img
-              src="https://randomuser.me/api/portraits/women/44.jpg"
-              alt="مدربة 2"
-            />
-            <h4>سارة محمد</h4>
-            <p>متخصصة في تمارين اليوغا والمرونة</p>
-          </div>
-          <div class="trainer">
-            <img
-              src="https://randomuser.me/api/portraits/men/56.jpg"
-              alt="مدرب 3"
-            />
-            <h4>خالد سعيد</h4>
-            <p>مدرب محترف في التمارين الرياضية الجماعية</p>
-          </div>
-        </div>
+        <div class="trainers-grid" id="trainers-grid"></div>
       </div>
     </section>
 
     <section id="testimonials" class="testimonials section-padding">
       <div class="container">
         <h2>آراء العملاء</h2>
-        <div class="carousel">
-          <div class="slide active">
-            <p>"سبايدر جيم غير حياتي! المدربون محترفون والدعم رائع."</p>
-            <h5>- فاطمة محمد</h5>
-          </div>
-          <div class="slide">
-            <p>"أفضل نادي رياضي جربته، والبيئة مشجعة جدا."</p>
-            <h5>- محمود أحمد</h5>
-          </div>
-          <div class="slide">
-            <p>"خدمات ممتازة وبرامج تدريبية فعالة."</p>
-            <h5>- ندى علي</h5>
-          </div>
-          <button class="prev">&#10094;</button>
-          <button class="next">&#10095;</button>
+        <div class="carousel" id="testimonials-carousel">
+          <button class="prev" onclick="prevTestimonial()">&#10094;</button>
+          <div id="testimonials-slides"></div>
+          <button class="next" onclick="nextTestimonial()">&#10095;</button>
         </div>
       </div>
     </section>
@@ -114,59 +66,13 @@
     <section id="blog" class="blog section-padding">
       <div class="container">
         <h2>آخر الأخبار</h2>
-        <div class="blog-posts">
-          <article class="post">
-            <h3>أهمية التمارين اليومية</h3>
-            <p>
-              تعرف على فوائد ممارسة التمارين الرياضية يومياً وكيف تؤثر على صحتك.
-            </p>
-            <a href="#">اقرأ المزيد</a>
-          </article>
-          <article class="post">
-            <h3>أفضل الأغذية للرياضيين</h3>
-            <p>نصائح عن الأطعمة التي تعزز الطاقة والأداء الرياضي.</p>
-            <a href="#">اقرأ المزيد</a>
-          </article>
-          <article class="post">
-            <h3>كيف تختار المدرب المناسب لك</h3>
-            <p>نصائح لاختيار المدرب الذي يناسب أهدافك.</p>
-            <a href="#">اقرأ المزيد</a>
-          </article>
-        </div>
+        <div class="blog-posts" id="blog-posts"></div>
       </div>
     </section>
 
     <section id="subscription" class="subscription container">
       <h2>خطط الاشتراك</h2>
-      <div class="subscription-cards">
-        <div class="subscription-card">
-          <h3>الخطة الأساسية</h3>
-          <div class="price">50$ / شهريًا</div>
-          <ul class="features">
-            <li>الوصول إلى الجيم طوال اليوم</li>
-            <li>حصص تدريب جماعية</li>
-            <li>دعم فني 24/7</li>
-          </ul>
-        </div>
-        <div class="subscription-card">
-          <h3>الخطة المميزة</h3>
-          <div class="price">80$ / شهريًا</div>
-          <ul class="features">
-            <li>كل مميزات الخطة الأساسية</li>
-            <li>جلسات تدريب شخصية</li>
-            <li>دخول إلى النادي الصحي</li>
-          </ul>
-        </div>
-        <div class="subscription-card">
-          <h3>الخطة الذهبية</h3>
-          <div class="price">120$ / شهريًا</div>
-          <ul class="features">
-            <li>كل مميزات الخطة المميزة</li>
-            <li>استشارات غذائية</li>
-            <li>دعوات لفعاليات حصرية</li>
-          </ul>
-        </div>
-      </div>
+      <div class="subscription-cards" id="subscription-cards"></div>
     </section>
 
     <section id="contact" class="contact section-padding">
