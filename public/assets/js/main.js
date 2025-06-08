@@ -44,10 +44,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const menuIcon = document.getElementById("menu-icon");
   const navLinks = document.querySelector(".nav-links");
   const navItems = document.querySelectorAll(".nav-links a");
+  const sections = document.querySelectorAll("section");
+  const header = document.querySelector("header")
 
   menuIcon.addEventListener("click", () => {
     navLinks.classList.toggle("open");
   });
+
+  document.body.onscroll = () => {
+    navLinks.classList.remove("open");
+  };
+
+  for (let i = 0; i < sections.length; i++) {
+    sections[i].onclick = () => {
+      navLinks.classList.remove("open");
+    }
+  }
+
+  header.onclick = () => {
+    navLinks.classList.remove("open");
+  }
 
   navItems.forEach((link) => {
     link.addEventListener("click", () => {
@@ -55,4 +71,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
-
