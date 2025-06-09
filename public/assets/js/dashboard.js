@@ -6,7 +6,7 @@ if (!token) window.location.href = "/login.html";
 document.addEventListener("DOMContentLoaded", () => {
   const sections = [
     { id: "services", fields: ["title", "description"], hasImage: false },
-    { id: "trainers", fields: ["name", "specialty", "imageUrl"], hasImage: true },
+    { id: "trainers", fields: ["name", "specialization", "imageUrl"], hasImage: true }, // تخصص trainer اسم الحقل موحد مع backend
     { id: "testimonials", fields: ["author", "content"], hasImage: false },
     { id: "lastnews", fields: ["title", "summary"], hasImage: false },
     { id: "subscriptions", fields: ["plan", "price"], hasImage: false },
@@ -27,26 +27,33 @@ async function setupSection(sectionId, fields, hasImage) {
 
   if (!form || !tableBody) return;
 
-  // تحميل بيانات من LocalStorage أولاً
+  // تحميل البيانات من localStorage اولًا
   const localData = JSON.parse(localStorage.getItem(storageKey) || "[]");
   renderTable(localData, tableBody, fields, sectionId);
 
-  // ثم تحميل البيانات من الخادم
+  // ثم جلب البيانات من API لتحديث البيانات من المصدر الأساسي
   await loadSectionData(sectionId, tableBody, fields, storageKey);
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // جلب القيم من الحقول الغير ملفات
     const inputs = Array.from(form.querySelectorAll("input:not([type=file]), textarea"));
     const values = inputs.map((input) => input.value.trim());
 
-    if (values.some(val => val === "")) return alert("يرجى ملء جميع الحقول");
+    if (values.some(val => val === "")) {
+      alert("يرجى ملء جميع الحقول");
+      return;
+    }
 
     let imageUrl = "";
     if (hasImage) {
       const imageInput = form.querySelector('input[type="file"]');
       const file = imageInput.files[0];
-      if (!file) return alert("يرجى اختيار صورة.");
+      if (!file) {
+        alert("يرجى اختيار صورة.");
+        return;
+      }
 
       try {
         const formData = new FormData();
@@ -55,17 +62,21 @@ async function setupSection(sectionId, fields, hasImage) {
         const res = await fetch(`${baseUrl}/api/${sectionId}/upload-image`, {
           method: "POST",
           body: formData,
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${token}` }, // توكن للمصادقة
         });
+
         const data = await res.json();
-        if (!res.ok) throw new Error(data.message);
+        if (!res.ok) throw new Error(data.message || "فشل رفع الصورة");
 
         imageUrl = data.imageUrl;
-      } catch {
-        return alert("خطأ في رفع الصورة");
+      } catch (err) {
+        console.error("خطأ في رفع الصورة:", err);
+        alert("خطأ في رفع الصورة: " + (err.message || ""));
+        return;
       }
     }
 
+    // تحضير البيانات للإرسال
     const bodyData = {};
     fields.forEach((field, i) => {
       bodyData[field] = field === "imageUrl" ? imageUrl : values[i];
@@ -82,16 +93,18 @@ async function setupSection(sectionId, fields, hasImage) {
       });
 
       const savedItem = await res.json();
-      if (!res.ok) throw new Error(savedItem.message);
+      if (!res.ok) throw new Error(savedItem.message || "خطأ في الحفظ");
 
-      addRow(tableBody, fields.map(f => savedItem[f]), sectionId, savedItem._id);
-      updateLocalStorage(storageKey, [...JSON.parse(localStorage.getItem(storageKey) || "[]"), savedItem]);
+      // إعادة تحميل البيانات كاملة بدلًا من إضافة صف يدوي (لضمان التزامن)
+      await loadSectionData(sectionId, tableBody, fields, storageKey);
 
+      // مسح الحقول بعد الحفظ
       inputs.forEach(input => input.value = "");
       if (hasImage) form.querySelector('input[type="file"]').value = "";
 
-    } catch {
-      alert("خطأ أثناء الحفظ");
+    } catch (err) {
+      console.error("خطأ أثناء الحفظ:", err);
+      alert("خطأ أثناء الحفظ: " + (err.message || ""));
     }
   });
 }
@@ -102,13 +115,13 @@ async function loadSectionData(sectionId, tbody, fields, storageKey) {
       headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
-    if (!res.ok) throw new Error();
+    if (!res.ok) throw new Error(data.message || "فشل تحميل البيانات");
 
     tbody.innerHTML = "";
     renderTable(data, tbody, fields, sectionId);
     localStorage.setItem(storageKey, JSON.stringify(data));
-  } catch {
-    console.error(`فشل تحميل بيانات ${sectionId}`);
+  } catch (err) {
+    console.error(`فشل تحميل بيانات ${sectionId}:`, err);
   }
 }
 
@@ -135,6 +148,7 @@ function addRow(tbody, values, sectionId, id) {
     img.src = values[2].startsWith("http") ? values[2] : baseUrl + values[2];
     img.style.width = "80px";
     img.style.height = "80px";
+    img.style.objectFit = "cover";
     const imgCell = document.createElement("td");
     imgCell.appendChild(img);
     row.appendChild(imgCell);
@@ -160,15 +174,19 @@ async function handleDelete(id, sectionId, row, tbody) {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
-    if (!res.ok) throw new Error();
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.message || "فشل في الحذف");
+    }
 
     row.remove();
     renumberRows(tbody);
 
     const newData = JSON.parse(localStorage.getItem(storageKey) || "[]").filter(item => item._id !== id);
     localStorage.setItem(storageKey, JSON.stringify(newData));
-  } catch {
-    alert("فشل في حذف العنصر");
+  } catch (err) {
+    console.error("خطأ في حذف العنصر:", err);
+    alert("فشل في حذف العنصر: " + (err.message || ""));
   }
 }
 
