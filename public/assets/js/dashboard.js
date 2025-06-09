@@ -9,9 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "services", fields: ["title", "description"], hasImage: false },
     {
       id: "trainers",
-      fields: ["name", "specialization", "imageUrl"],
+      fields: ["name", "speciality", "imageUrl"],
       hasImage: true,
-    }, // تخصص trainer اسم الحقل موحد مع backend
+    },
     { id: "testimonials", fields: ["author", "content"], hasImage: false },
     { id: "lastnews", fields: ["title", "summary"], hasImage: false },
     { id: "subscriptions", fields: ["plan", "price"], hasImage: false },
