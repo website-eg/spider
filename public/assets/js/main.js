@@ -1,4 +1,5 @@
-const baseUrl = "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev";
+const baseUrl =
+  "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev";
 
 document.addEventListener("DOMContentLoaded", () => {
   renderServices();
@@ -18,11 +19,15 @@ async function renderServices() {
     const services = await res.json();
 
     container.innerHTML = services.length
-      ? services.map(({ title, description }) => `
+      ? services
+          .map(
+            ({ title, description }) => `
         <div class="card">
           <h3>${title}</h3>
           <p>${description}</p>
-        </div>`).join("")
+        </div>`
+          )
+          .join("")
       : `<p>لا توجد خدمات حالياً.</p>`;
   } catch (err) {
     console.error(err);
@@ -40,12 +45,16 @@ async function renderTrainers() {
     const trainers = await res.json();
 
     container.innerHTML = trainers.length
-      ? trainers.map(({ name, specialty, imageUrl }) => `
+      ? trainers
+          .map(
+            ({ name, specialty, imageUrl }) => `
         <div class="trainer">
           <img src="${imageUrl}" alt="${name}" />
           <h4>${name}</h4>
           <p>${specialty}</p>
-        </div>`).join("")
+        </div>`
+          )
+          .join("")
       : `<p>لا يوجد مدربين حالياً.</p>`;
   } catch (err) {
     console.error(err);
@@ -67,11 +76,17 @@ async function renderTestimonials() {
       return;
     }
 
-    container.innerHTML = testimonials.map(({ author, content }) => `
+    container.innerHTML =
+      testimonials
+        .map(
+          ({ author, content }) => `
       <div class="slide">
         <p>"${content}"</p>
         <h5>- ${author}</h5>
-      </div>`).join("") + `
+      </div>`
+        )
+        .join("") +
+      `
       <button class="prev">&#10094;</button>
       <button class="next">&#10095;</button>`;
 
@@ -92,7 +107,9 @@ async function renderSubscriptions() {
     const plans = await res.json();
 
     container.innerHTML = plans.length
-      ? plans.map(({ plan, price }) => `
+      ? plans
+          .map(
+            ({ plan, price }) => `
         <div class="subscription-card">
           <h3>${plan}</h3>
           <div class="price">${price} جنية</div>
@@ -101,7 +118,9 @@ async function renderSubscriptions() {
             <li>دعم 24/7</li>
             <li>إلغاء في أي وقت</li>
           </ul>
-        </div>`).join("")
+        </div>`
+          )
+          .join("")
       : `<p>لا توجد باقات حالياً.</p>`;
   } catch (err) {
     console.error(err);
@@ -119,11 +138,15 @@ async function renderBlogPosts() {
     const posts = await res.json();
 
     container.innerHTML = posts.length
-      ? posts.map(({ title, summary }) => `
+      ? posts
+          .map(
+            ({ title, summary }) => `
         <article class="post">
           <h3>${title}</h3>
           <p>${summary}</p>
-        </article>`).join("")
+        </article>`
+          )
+          .join("")
       : `<p>لا توجد أخبار حالياً.</p>`;
   } catch (err) {
     console.error(err);
@@ -156,3 +179,44 @@ function initCarousel() {
 
   showSlide(currentSlide);
 }
+
+const menuIcon = document.getElementById("menu-icon");
+const navLinks = document.querySelector(".nav-links");
+
+menuIcon.addEventListener("click", () => {
+  navLinks.classList.toggle("open");
+});
+
+document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+    const targetId = this.getAttribute("href").substring(1);
+    const target = document.getElementById(targetId);
+
+    if (target) {
+      const offset = 50;
+      const targetPosition =
+        target.getBoundingClientRect().top + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: targetPosition,
+        behavior: "smooth",
+      });
+
+      navLinks.classList.remove("open");
+    }
+  });
+});
+
+const sections = document.querySelectorAll("section");
+const header = document.querySelector("header");
+
+header.onclick = () => {
+  navLinks.classList.remove("open");
+};
+
+sections.forEach((section) => {
+  section.onclick = () => {
+    navLinks.classList.remove("open");
+  };
+});

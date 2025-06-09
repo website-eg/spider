@@ -226,7 +226,7 @@ document.querySelectorAll('nav a[href^="#"]').forEach((link) => {
     const target = document.getElementById(targetId);
 
     if (target) {
-      const offset = 450;
+      const offset = 500;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = target.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;

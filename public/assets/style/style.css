@@ -428,7 +428,7 @@ form#contact-form button:hover {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 70%;
+    width: 65%;
     height: 100vh;
     background: #111;
     flex-direction: column;
@@ -445,7 +445,7 @@ form#contact-form button:hover {
   }
 
   nav#navbar .nav-links li a {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     display: block;
     width: 100%;
   }
