@@ -1,12 +1,17 @@
-const baseUrl = "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev";
+const baseUrl =
+  "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev";
 const token = localStorage.getItem("token");
 
-if (!token) window.location.href = "/login.html";
+// if (!token) window.location.href = "/login.html";
 
 document.addEventListener("DOMContentLoaded", () => {
   const sections = [
     { id: "services", fields: ["title", "description"], hasImage: false },
-    { id: "trainers", fields: ["name", "specialization", "imageUrl"], hasImage: true }, // تخصص trainer اسم الحقل موحد مع backend
+    {
+      id: "trainers",
+      fields: ["name", "specialization", "imageUrl"],
+      hasImage: true,
+    }, // تخصص trainer اسم الحقل موحد مع backend
     { id: "testimonials", fields: ["author", "content"], hasImage: false },
     { id: "lastnews", fields: ["title", "summary"], hasImage: false },
     { id: "subscriptions", fields: ["plan", "price"], hasImage: false },
@@ -38,10 +43,12 @@ async function setupSection(sectionId, fields, hasImage) {
     e.preventDefault();
 
     // جلب القيم من الحقول الغير ملفات
-    const inputs = Array.from(form.querySelectorAll("input:not([type=file]), textarea"));
+    const inputs = Array.from(
+      form.querySelectorAll("input:not([type=file]), textarea")
+    );
     const values = inputs.map((input) => input.value.trim());
 
-    if (values.some(val => val === "")) {
+    if (values.some((val) => val === "")) {
       alert("يرجى ملء جميع الحقول");
       return;
     }
@@ -99,9 +106,8 @@ async function setupSection(sectionId, fields, hasImage) {
       await loadSectionData(sectionId, tableBody, fields, storageKey);
 
       // مسح الحقول بعد الحفظ
-      inputs.forEach(input => input.value = "");
+      inputs.forEach((input) => (input.value = ""));
       if (hasImage) form.querySelector('input[type="file"]').value = "";
-
     } catch (err) {
       console.error("خطأ أثناء الحفظ:", err);
       alert("خطأ أثناء الحفظ: " + (err.message || ""));
@@ -127,8 +133,8 @@ async function loadSectionData(sectionId, tbody, fields, storageKey) {
 
 function renderTable(data, tbody, fields, sectionId) {
   tbody.innerHTML = "";
-  data.forEach(item => {
-    const values = fields.map(f => item[f]);
+  data.forEach((item) => {
+    const values = fields.map((f) => item[f]);
     addRow(tbody, values, sectionId, item._id);
   });
 }
@@ -153,7 +159,7 @@ function addRow(tbody, values, sectionId, id) {
     imgCell.appendChild(img);
     row.appendChild(imgCell);
   } else {
-    values.forEach(val => row.appendChild(createCell(val)));
+    values.forEach((val) => row.appendChild(createCell(val)));
   }
 
   const actionCell = document.createElement("td");
@@ -182,7 +188,9 @@ async function handleDelete(id, sectionId, row, tbody) {
     row.remove();
     renumberRows(tbody);
 
-    const newData = JSON.parse(localStorage.getItem(storageKey) || "[]").filter(item => item._id !== id);
+    const newData = JSON.parse(localStorage.getItem(storageKey) || "[]").filter(
+      (item) => item._id !== id
+    );
     localStorage.setItem(storageKey, JSON.stringify(newData));
   } catch (err) {
     console.error("خطأ في حذف العنصر:", err);
@@ -205,3 +213,31 @@ function renumberRows(tbody) {
 function updateLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
+
+function toggleNav() {
+  document.getElementById("main-nav").classList.toggle("open");
+}
+
+document.querySelectorAll('nav a[href^="#"]').forEach((link) => {
+  link.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    const targetId = this.getAttribute("href").substring(1);
+    const target = document.getElementById(targetId);
+
+    if (target) {
+      const offset = 450;
+      const bodyRect = document.body.getBoundingClientRect().top;
+      const elementRect = target.getBoundingClientRect().top;
+      const elementPosition = elementRect - bodyRect;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth",
+      });
+
+      document.getElementById("main-nav").classList.remove("open");
+    }
+  });
+});
