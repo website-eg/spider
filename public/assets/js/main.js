@@ -47,11 +47,11 @@ async function renderTrainers() {
     container.innerHTML = trainers.length
       ? trainers
           .map(
-            ({ name, specialty, imageUrl }) => `
+            ({ name, specialization, imageUrl }) => `
         <div class="trainer">
           <img src="${imageUrl}" alt="${name}" />
           <h4>${name}</h4>
-          <p>${specialty}</p>
+          <p>${specialization}</p>
         </div>`
           )
           .join("")
