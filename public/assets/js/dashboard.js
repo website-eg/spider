@@ -1,10 +1,12 @@
-const token = localStorage.getItem('token');
-fetch('/api/protected-route', {
-  headers: { Authorization: `Bearer ${token}` }
+const baseUrl = "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev";
+
+const token = localStorage.getItem("token");
+fetch("/api/protected-route", {
+  headers: { Authorization: `Bearer ${token}` },
 });
 
-if (!localStorage.getItem('token')) {
-  window.location.href = '/login.html';
+if (!localStorage.getItem("token")) {
+  window.location.href = "/login.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -61,7 +63,7 @@ function setupSection(sectionId, requiredCount) {
         formData.append("image", file);
 
         const res = await fetch(
-          "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev/api/trainers/upload",
+          baseUrl + "/api/trainers/upload-image",
           {
             method: "POST",
             body: formData,
@@ -71,7 +73,10 @@ function setupSection(sectionId, requiredCount) {
         const data = await res.json();
         if (!res.ok) throw new Error(data.message || "فشل رفع الصورة");
 
-        const imageUrl = data.imageUrl;
+        // حفظ الرابط النسبي فقط
+        const imageUrl = data.imageUrl.startsWith(baseUrl)
+          ? data.imageUrl.replace(baseUrl, "")
+          : data.imageUrl;
         values[2] = imageUrl;
       } catch (err) {
         console.error(err);
@@ -101,7 +106,13 @@ function addRow(tbody, values, sectionId, storageKey) {
     row.appendChild(createCell(values[1])); // التخصص
     const imgCell = document.createElement("td");
     const img = document.createElement("img");
-    img.src = values[2];
+
+    let fullImageUrl = values[2];
+    if (!fullImageUrl.startsWith("http")) {
+      fullImageUrl = baseUrl + fullImageUrl;
+    }
+
+    img.src = fullImageUrl;
     img.alt = `صورة ${values[0]}`;
     img.style.width = "80px";
     img.style.height = "80px";
@@ -142,10 +153,15 @@ function updateLocalStorage(tbody, sectionId, storageKey) {
     const cells = row.querySelectorAll("td");
 
     if (sectionId === "trainers") {
+      const imgElement = cells[3].querySelector("img");
+      let imgSrc = imgElement?.src || "";
+      if (imgSrc.startsWith(baseUrl)) {
+        imgSrc = imgSrc.replace(baseUrl, "");
+      }
       data.push([
         cells[1].textContent,
         cells[2].textContent,
-        cells[3].querySelector("img")?.src || "",
+        imgSrc,
       ]);
     } else {
       const rowData = [];
