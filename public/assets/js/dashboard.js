@@ -4,6 +4,12 @@ const token = localStorage.getItem("token");
 
 // if (!token) window.location.href = "/login.html";
 
+let editMode = {
+  active: false,
+  sectionId: null,
+  itemId: null,
+};
+
 document.addEventListener("DOMContentLoaded", () => {
   const sections = [
     { id: "services", fields: ["title", "description"], hasImage: false },
@@ -11,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
       id: "trainers",
       fields: ["name", "specialization", "imageUrl"],
       hasImage: true,
-    }, // تخصص trainer اسم الحقل موحد مع backend
+    },
     { id: "testimonials", fields: ["author", "content"], hasImage: false },
     { id: "lastnews", fields: ["title", "summary"], hasImage: false },
     { id: "subscriptions", fields: ["plan", "price"], hasImage: false },
@@ -32,17 +38,12 @@ async function setupSection(sectionId, fields, hasImage) {
 
   if (!form || !tableBody) return;
 
-  // تحميل البيانات من localStorage اولًا
   const localData = JSON.parse(localStorage.getItem(storageKey) || "[]");
   renderTable(localData, tableBody, fields, sectionId);
-
-  // ثم جلب البيانات من API لتحديث البيانات من المصدر الأساسي
   await loadSectionData(sectionId, tableBody, fields, storageKey);
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-
-    // جلب القيم من الحقول الغير ملفات
     const inputs = Array.from(
       form.querySelectorAll("input:not([type=file]), textarea")
     );
@@ -57,41 +58,45 @@ async function setupSection(sectionId, fields, hasImage) {
     if (hasImage) {
       const imageInput = form.querySelector('input[type="file"]');
       const file = imageInput.files[0];
-      if (!file) {
-        alert("يرجى اختيار صورة.");
-        return;
-      }
+      if (file) {
+        try {
+          const formData = new FormData();
+          formData.append("image", file);
 
-      try {
-        const formData = new FormData();
-        formData.append("image", file);
+          const res = await fetch(`${baseUrl}/api/${sectionId}/upload-image`, {
+            method: "POST",
+            body: formData,
+            headers: { Authorization: `Bearer ${token}` },
+          });
 
-        const res = await fetch(`${baseUrl}/api/${sectionId}/upload-image`, {
-          method: "POST",
-          body: formData,
-          headers: { Authorization: `Bearer ${token}` }, // توكن للمصادقة
-        });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.message || "فشل رفع الصورة");
 
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "فشل رفع الصورة");
-
-        imageUrl = data.imageUrl;
-      } catch (err) {
-        console.error("خطأ في رفع الصورة:", err);
-        alert("خطأ في رفع الصورة: " + (err.message || ""));
-        return;
+          imageUrl = data.imageUrl;
+        } catch (err) {
+          console.error("خطأ في رفع الصورة:", err);
+          alert("خطأ في رفع الصورة: " + (err.message || ""));
+          return;
+        }
       }
     }
 
-    // تحضير البيانات للإرسال
     const bodyData = {};
     fields.forEach((field, i) => {
       bodyData[field] = field === "imageUrl" ? imageUrl : values[i];
     });
 
+    if (hasImage && !imageUrl && editMode.active) {
+      bodyData.imageUrl = getItemFromStorage(sectionId, editMode.itemId)?.imageUrl || "";
+    }
+
     try {
-      const res = await fetch(`${baseUrl}/api/${sectionId}`, {
-        method: "POST",
+      const url = editMode.active
+        ? `${baseUrl}/api/${sectionId}/${editMode.itemId}`
+        : `${baseUrl}/api/${sectionId}`;
+
+      const res = await fetch(url, {
+        method: editMode.active ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -99,20 +104,26 @@ async function setupSection(sectionId, fields, hasImage) {
         body: JSON.stringify(bodyData),
       });
 
-      const savedItem = await res.json();
-      if (!res.ok) throw new Error(savedItem.message || "خطأ في الحفظ");
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message || "خطأ في الحفظ");
 
-      // إعادة تحميل البيانات كاملة بدلًا من إضافة صف يدوي (لضمان التزامن)
       await loadSectionData(sectionId, tableBody, fields, storageKey);
 
-      // مسح الحقول بعد الحفظ
       inputs.forEach((input) => (input.value = ""));
       if (hasImage) form.querySelector('input[type="file"]').value = "";
+
+      editMode = { active: false, sectionId: null, itemId: null };
     } catch (err) {
       console.error("خطأ أثناء الحفظ:", err);
       alert("خطأ أثناء الحفظ: " + (err.message || ""));
     }
   });
+}
+
+function getItemFromStorage(sectionId, itemId) {
+  const storageKey = `spider_${sectionId}_data`;
+  const data = JSON.parse(localStorage.getItem(storageKey) || "[]");
+  return data.find((item) => item._id === itemId);
 }
 
 async function loadSectionData(sectionId, tbody, fields, storageKey) {
@@ -135,11 +146,11 @@ function renderTable(data, tbody, fields, sectionId) {
   tbody.innerHTML = "";
   data.forEach((item) => {
     const values = fields.map((f) => item[f]);
-    addRow(tbody, values, sectionId, item._id);
+    addRow(tbody, values, sectionId, item._id, item);
   });
 }
 
-function addRow(tbody, values, sectionId, id) {
+function addRow(tbody, values, sectionId, id, originalItem) {
   const row = document.createElement("tr");
   row.dataset.id = id;
 
@@ -167,9 +178,29 @@ function addRow(tbody, values, sectionId, id) {
   delBtn.textContent = "حذف";
   delBtn.onclick = () => handleDelete(id, sectionId, row, tbody);
   actionCell.appendChild(delBtn);
-  row.appendChild(actionCell);
 
+  const editBtn = document.createElement("button");
+  editBtn.textContent = "تعديل";
+  editBtn.onclick = () => handleEdit(sectionId, originalItem);
+  actionCell.appendChild(editBtn);
+
+  row.appendChild(actionCell);
   tbody.appendChild(row);
+}
+
+function handleEdit(sectionId, item) {
+  const section = document.getElementById(sectionId);
+  const form = section.querySelector("form");
+  const inputs = Array.from(
+    form.querySelectorAll("input:not([type=file]), textarea")
+  );
+
+  inputs.forEach((input) => {
+    input.value = item[input.name] || "";
+  });
+
+  editMode = { active: true, sectionId: sectionId, itemId: item._id };
+  window.scrollTo({ top: section.offsetTop - 100, behavior: "smooth" });
 }
 
 async function handleDelete(id, sectionId, row, tbody) {
@@ -208,10 +239,6 @@ function renumberRows(tbody) {
   Array.from(tbody.children).forEach((row, i) => {
     row.querySelector("td").textContent = i + 1;
   });
-}
-
-function updateLocalStorage(key, data) {
-  localStorage.setItem(key, JSON.stringify(data));
 }
 
 function toggleNav() {
