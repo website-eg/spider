@@ -109,14 +109,14 @@ async function renderSubscriptions() {
     container.innerHTML = plans.length
       ? plans
           .map(
-            ({ plan, price }) => `
+            ({ planName, price, desc1, desc2, desc3 }) => `
         <div class="subscription-card">
           <h3>${plan}</h3>
           <div class="price">${price} جنية</div>
           <ul class="features">
-            <li>مناسبة للمبتدئين</li>
-            <li>دعم 24/7</li>
-            <li>إلغاء في أي وقت</li>
+            <li>${desc1}</li>
+            <li>${desc2}</li>
+            <li>${desc3}</li>
           </ul>
         </div>`
           )

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     { id: "testimonials", fields: ["name", "opinion"], hasImage: false },
     { id: "lastnews", fields: ["title", "description", "link"], hasImage: false },
-    { id: "subscriptions", fields: ["plan", "price"], hasImage: false },
+    { id: "subscriptions", fields: ["planName", "price", "desc1", "desc2", "desc3"], hasImage: false },
   ];
 
   sections.forEach(({ id, fields, hasImage }) => {
