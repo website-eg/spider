@@ -1,12 +1,12 @@
-const token = localStorage.getItem('token');
-fetch('/api/protected-route', {
-  headers: { Authorization: `Bearer ${token}` }
-});
+// const token = localStorage.getItem('token');
+// fetch('/api/protected-route', {
+//   headers: { Authorization: `Bearer ${token}` }
+// });
 
 
-if (!localStorage.getItem('token')) {
-  window.location.href = '/login.html';
-}
+// if (!localStorage.getItem('token')) {
+//   window.location.href = '/login.html';
+// }
 
 document.addEventListener('DOMContentLoaded', () => {
   const sections = [
@@ -33,22 +33,52 @@ function setupSection(sectionId, requiredCount) {
   const savedData = JSON.parse(localStorage.getItem(storageKey)) || [];
   savedData.forEach(dataRow => addRow(tableBody, dataRow, sectionId, storageKey));
 
-  form.addEventListener('submit', e => {
+  form.addEventListener('submit', async e => {
     e.preventDefault();
 
     const inputs = Array.from(form.querySelectorAll('input, textarea'));
     const values = inputs.map(input => input.value.trim());
 
-    if (values.slice(0, requiredCount).some(val => val === '')) {
+    if (values.slice(0, requiredCount - 1).some(val => val === '')) {
       alert('يرجى ملء جميع الحقول المطلوبة');
       return;
     }
 
-    savedData.push(values);
-    localStorage.setItem(storageKey, JSON.stringify(savedData));
+    // حالة قسم المدربين مع رفع صورة
+    if (sectionId === 'trainers') {
+      const imageInput = form.querySelector('input[type="file"]');
+      const file = imageInput.files[0];
+      if (!file) {
+        alert('يرجى اختيار صورة المدرب.');
+        return;
+      }
 
+      try {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const res = await fetch('http://localhost:5000/api/trainers/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'فشل رفع الصورة');
+
+        const imageUrl = data.imageUrl;
+        values[2] = imageUrl;
+
+      } catch (err) {
+        console.error(err);
+        alert('حدث خطأ أثناء رفع الصورة.');
+        return;
+      }
+    }
+
+    // الحفظ والعرض
+    const newData = [...savedData, values];
+    localStorage.setItem(storageKey, JSON.stringify(newData));
     addRow(tableBody, values, sectionId, storageKey);
-
     inputs.forEach(input => input.value = '');
   });
 }
@@ -62,9 +92,8 @@ function addRow(tbody, values, sectionId, storageKey) {
   row.appendChild(numCell);
 
   if (sectionId === 'trainers') {
-    // اسم، تخصص، صورة
-    row.appendChild(createCell(values[0]));
-    row.appendChild(createCell(values[1]));
+    row.appendChild(createCell(values[0])); // الاسم
+    row.appendChild(createCell(values[1])); // التخصص
     const imgCell = document.createElement('td');
     const img = document.createElement('img');
     img.src = values[2];
