@@ -111,7 +111,7 @@ async function renderSubscriptions() {
           .map(
             ({ planName, price, desc1, desc2, desc3 }) => `
         <div class="subscription-card">
-          <h3>${plan}</h3>
+          <h3>${planName}</h3>
           <div class="price">${price} جنية</div>
           <ul class="features">
             <li>${desc1}</li>
