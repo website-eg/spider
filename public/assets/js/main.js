@@ -111,10 +111,10 @@ function renderTrainers() {
     container.innerHTML = `<p>لا يوجد مدربين حالياً.</p>`;
     return;
   }
-  trainers.forEach(([name, desc]) => {
+  trainers.forEach(([name, desc, link]) => {
     container.innerHTML += `
       <div class="trainer">
-        <img src="https://randomuser.me/api/portraits/lego/${Math.floor(Math.random() * 10)}.jpg" alt="${name}" />
+        <img src="${link}" alt="${name}" />
         <h4>${name}</h4>
         <p>${desc}</p>
       </div>`;
