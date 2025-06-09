@@ -1,10 +1,10 @@
-const token = localStorage.getItem('token');
-fetch('/api/protected-route', {
-  headers: { Authorization: `Bearer ${token}` }
+const token = localStorage.getItem("token");
+fetch("/api/protected-route", {
+  headers: { Authorization: `Bearer ${token}` },
 });
 
-if (!localStorage.getItem('token')) {
-  window.location.href = '/login.html';
+if (!localStorage.getItem("token")) {
+  window.location.href = "/login.html";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -47,7 +47,6 @@ function setupSection(sectionId, requiredCount) {
       return;
     }
 
-    // حالة قسم المدربين مع رفع صورة
     if (sectionId === "trainers") {
       const imageInput = form.querySelector('input[type="file"]');
       const file = imageInput.files[0];
@@ -60,27 +59,27 @@ function setupSection(sectionId, requiredCount) {
         const formData = new FormData();
         formData.append("image", file);
 
-        const res = await fetch(
-          "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev/api/trainers/upload",
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const res = await fetch("/api/trainers/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || "فشل رفع الصورة");
+        }
 
         const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "فشل رفع الصورة");
-
         const imageUrl = data.imageUrl;
         values[2] = imageUrl;
       } catch (err) {
         console.error(err);
-        alert("حدث خطأ أثناء رفع الصورة.");
+        alert("حدث خطأ أثناء رفع الصورة: " + err.message);
         return;
       }
     }
 
-    // الحفظ والعرض
+    // تخزين البيانات وعرضها
     const newData = [...savedData, values];
     localStorage.setItem(storageKey, JSON.stringify(newData));
     addRow(tableBody, values, sectionId, storageKey);
