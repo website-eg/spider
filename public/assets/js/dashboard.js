@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
       hasImage: true,
     },
     { id: "testimonials", fields: ["name", "opinion"], hasImage: false },
-    { id: "lastnews", fields: ["title", "summary"], hasImage: false },
+    { id: "lastnews", fields: ["title", "description", "link"], hasImage: false },
     { id: "subscriptions", fields: ["plan", "price"], hasImage: false },
   ];
 

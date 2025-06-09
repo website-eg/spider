@@ -140,10 +140,11 @@ async function renderBlogPosts() {
     container.innerHTML = posts.length
       ? posts
           .map(
-            ({ title, summary }) => `
+            ({ title,  description, link}) => `
         <article class="post">
           <h3>${title}</h3>
-          <p>${summary}</p>
+          <p>${description}</p>
+          <a href="${link}">أقراء المزيد</a>
         </article>`
           )
           .join("")
