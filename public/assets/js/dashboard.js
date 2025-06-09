@@ -2,7 +2,7 @@ const baseUrl =
   "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev";
 const token = localStorage.getItem("token");
 
-// if (!token) window.location.href = "/login.html";
+if (!token) window.location.href = "/login.html";
 
 document.addEventListener("DOMContentLoaded", () => {
   const sections = [
@@ -32,17 +32,14 @@ async function setupSection(sectionId, fields, hasImage) {
 
   if (!form || !tableBody) return;
 
-  // تحميل البيانات من localStorage اولًا
   const localData = JSON.parse(localStorage.getItem(storageKey) || "[]");
   renderTable(localData, tableBody, fields, sectionId);
 
-  // ثم جلب البيانات من API لتحديث البيانات من المصدر الأساسي
   await loadSectionData(sectionId, tableBody, fields, storageKey);
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // جلب القيم من الحقول الغير ملفات
     const inputs = Array.from(
       form.querySelectorAll("input:not([type=file]), textarea")
     );
@@ -83,7 +80,6 @@ async function setupSection(sectionId, fields, hasImage) {
       }
     }
 
-    // تحضير البيانات للإرسال
     const bodyData = {};
     fields.forEach((field, i) => {
       bodyData[field] = field === "imageUrl" ? imageUrl : values[i];
@@ -102,10 +98,8 @@ async function setupSection(sectionId, fields, hasImage) {
       const savedItem = await res.json();
       if (!res.ok) throw new Error(savedItem.message || "خطأ في الحفظ");
 
-      // إعادة تحميل البيانات كاملة بدلًا من إضافة صف يدوي (لضمان التزامن)
       await loadSectionData(sectionId, tableBody, fields, storageKey);
 
-      // مسح الحقول بعد الحفظ
       inputs.forEach((input) => (input.value = ""));
       if (hasImage) form.querySelector('input[type="file"]').value = "";
     } catch (err) {
@@ -240,4 +234,10 @@ document.querySelectorAll('nav a[href^="#"]').forEach((link) => {
       document.getElementById("main-nav").classList.remove("open");
     }
   });
+});
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("token"); 
+  localStorage.removeItem("isLoggedIn");
+  window.location.href = "login.html";
 });
