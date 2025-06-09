@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
     { id: "services", fields: ["title", "description"], hasImage: false },
     {
       id: "trainers",
-      fields: ["name", "speciality", "imageUrl"],
+      fields: ["name", "specialization", "imageUrl"],
       hasImage: true,
     },
     { id: "testimonials", fields: ["author", "content"], hasImage: false },
