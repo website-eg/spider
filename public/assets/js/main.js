@@ -79,10 +79,10 @@ async function renderTestimonials() {
     container.innerHTML =
       testimonials
         .map(
-          ({ author, content }) => `
+          ({ name, opinion }) => `
       <div class="slide">
-        <p>"${content}"</p>
-        <h5>- ${author}</h5>
+        <p>"${opinion}"</p>
+        <h5>- ${name}</h5>
       </div>`
         )
         .join("") +
