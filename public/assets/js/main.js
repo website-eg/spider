@@ -1,76 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const slides = document.querySelectorAll(".testimonials .slide");
-  const prevBtn = document.querySelector(".testimonials button.prev");
-  const nextBtn = document.querySelector(".testimonials button.next");
-  let current = 0;
-
-  function showSlide(index) {
-    slides.forEach((slide, i) => {
-      slide.classList.toggle("active", i === index);
-    });
-  }
-
-  function nextSlide() {
-    current = (current + 1) % slides.length;
-    showSlide(current);
-  }
-
-  function prevSlide() {
-    current = (current - 1 + slides.length) % slides.length;
-    showSlide(current);
-  }
-
-  showSlide(current);
-
-  let autoSlide = setInterval(nextSlide, 5000);
-
-  nextBtn.addEventListener("click", () => {
-    nextSlide();
-    resetInterval();
-  });
-
-  prevBtn.addEventListener("click", () => {
-    prevSlide();
-    resetInterval();
-  });
-
-  function resetInterval() {
-    clearInterval(autoSlide);
-    autoSlide = setInterval(nextSlide, 5000);
-  }
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-  const menuIcon = document.getElementById("menu-icon");
-  const navLinks = document.querySelector(".nav-links");
-  const navItems = document.querySelectorAll(".nav-links a");
-  const sections = document.querySelectorAll("section");
-  const header = document.querySelector("header");
-
-  menuIcon.addEventListener("click", () => {
-    navLinks.classList.toggle("open");
-  });
-
-  document.body.onscroll = () => {
-    navLinks.classList.remove("open");
-  };
-
-  for (let i = 0; i < sections.length; i++) {
-    sections[i].onclick = () => {
-      navLinks.classList.remove("open");
-    };
-  }
-
-  header.onclick = () => {
-    navLinks.classList.remove("open");
-  };
-
-  navItems.forEach((link) => {
-    link.addEventListener("click", () => {
-      navLinks.classList.remove("open");
-    });
-  });
-});
+const baseUrl = "https://3151de04-72ef-4cfe-a32e-1b7d24b3f829-00-x6mg4vwn74xx.picard.replit.dev";
 
 document.addEventListener("DOMContentLoaded", () => {
   renderServices();
@@ -81,129 +9,129 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // عرض الخدمات
-function renderServices() {
+async function renderServices() {
   const container = document.querySelector(".service-cards");
   if (!container) return;
-  const services = JSON.parse(localStorage.getItem("spider_services_data") || "[]");
 
-  container.innerHTML = "";
-  if (services.length === 0) {
-    container.innerHTML = `<p>لا توجد خدمات حالياً.</p>`;
-    return;
+  try {
+    const res = await fetch(`${baseUrl}/api/services`);
+    const services = await res.json();
+
+    container.innerHTML = services.length
+      ? services.map(({ title, description }) => `
+        <div class="card">
+          <h3>${title}</h3>
+          <p>${description}</p>
+        </div>`).join("")
+      : `<p>لا توجد خدمات حالياً.</p>`;
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p>فشل تحميل الخدمات.</p>`;
   }
-  services.forEach(([title, desc]) => {
-    container.innerHTML += `
-      <div class="card">
-        <h3>${title}</h3>
-        <p>${desc}</p>
-      </div>`;
-  });
 }
 
 // عرض المدربين
-function renderTrainers() {
+async function renderTrainers() {
   const container = document.querySelector(".trainers-grid");
   if (!container) return;
-  const trainers = JSON.parse(localStorage.getItem("spider_trainers_data") || "[]");
 
-  container.innerHTML = "";
-  if (trainers.length === 0) {
-    container.innerHTML = `<p>لا يوجد مدربين حالياً.</p>`;
-    return;
+  try {
+    const res = await fetch(`${baseUrl}/api/trainers`);
+    const trainers = await res.json();
+
+    container.innerHTML = trainers.length
+      ? trainers.map(({ name, specialty, imageUrl }) => `
+        <div class="trainer">
+          <img src="${imageUrl}" alt="${name}" />
+          <h4>${name}</h4>
+          <p>${specialty}</p>
+        </div>`).join("")
+      : `<p>لا يوجد مدربين حالياً.</p>`;
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p>فشل تحميل بيانات المدربين.</p>`;
   }
-  trainers.forEach(([name, desc, link]) => {
-    container.innerHTML += `
-      <div class="trainer">
-        <img src="${link}" alt="${name}" />
-        <h4>${name}</h4>
-        <p>${desc}</p>
-      </div>`;
-  });
 }
 
-// عرض شهادات العملاء (Testimonials) مع Carousel
-function renderTestimonials() {
+// عرض شهادات العملاء
+async function renderTestimonials() {
   const container = document.querySelector(".carousel");
   if (!container) return;
-  
-  const testimonials = JSON.parse(localStorage.getItem("spider_testimonials_data") || "[]");
 
-  if (testimonials.length === 0) {
-    container.innerHTML = `<p>لا توجد شهادات حالياً.</p>`;
-    return;
-  }
+  try {
+    const res = await fetch(`${baseUrl}/api/testimonials`);
+    const testimonials = await res.json();
 
-  container.innerHTML =
-    testimonials
-      .map(
-        ([author, text]) => `
+    if (testimonials.length === 0) {
+      container.innerHTML = `<p>لا توجد شهادات حالياً.</p>`;
+      return;
+    }
+
+    container.innerHTML = testimonials.map(({ author, content }) => `
       <div class="slide">
-        <p>"${text}"</p>
+        <p>"${content}"</p>
         <h5>- ${author}</h5>
-      </div>`
-      )
-      .join("") +
-    `
-    <button class="prev">&#10094;</button>
-    <button class="next">&#10095;</button>`;
+      </div>`).join("") + `
+      <button class="prev">&#10094;</button>
+      <button class="next">&#10095;</button>`;
 
-  const slides = container.querySelectorAll(".slide");
-  if (slides.length > 0) slides[0].classList.add("active");
-
-  initCarousel();
+    initCarousel();
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p>فشل تحميل الشهادات.</p>`;
+  }
 }
-
 
 // عرض باقات الاشتراك
-function renderSubscriptions() {
+async function renderSubscriptions() {
   const container = document.querySelector(".subscription-cards");
   if (!container) return;
-  const plans = JSON.parse(localStorage.getItem("spider_subscriptions_data") || "[]");
 
-  container.innerHTML = "";
-  if (plans.length === 0) {
-    container.innerHTML = `<p>لا توجد باقات حالياً.</p>`;
-    return;
+  try {
+    const res = await fetch(`${baseUrl}/api/subscriptions`);
+    const plans = await res.json();
+
+    container.innerHTML = plans.length
+      ? plans.map(({ plan, price }) => `
+        <div class="subscription-card">
+          <h3>${plan}</h3>
+          <div class="price">${price} جنية</div>
+          <ul class="features">
+            <li>مناسبة للمبتدئين</li>
+            <li>دعم 24/7</li>
+            <li>إلغاء في أي وقت</li>
+          </ul>
+        </div>`).join("")
+      : `<p>لا توجد باقات حالياً.</p>`;
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p>فشل تحميل الباقات.</p>`;
   }
-
-  plans.forEach(([title, price, feature1, feature2, feature3]) => {
-    container.innerHTML += `
-      <div class="subscription-card">
-        <h3>${title}</h3>
-        <div class="price">${price} جنية</div>
-        <ul class="features">
-          <li>${feature1}</li>
-          <li>${feature2}</li>
-          <li>${feature3}</li>
-        </ul>
-      </div>`;
-  });
 }
 
-// عرض أخبار المدونة
-function renderBlogPosts() {
+// عرض الأخبار
+async function renderBlogPosts() {
   const container = document.querySelector(".blog-posts");
   if (!container) return;
-  const posts = JSON.parse(localStorage.getItem("spider_lastnews_data") || "[]");
 
-  if (posts.length === 0) {
-    container.innerHTML = `<p>لا توجد أخبار حالياً.</p>`;
-    return;
+  try {
+    const res = await fetch(`${baseUrl}/api/lastnews`);
+    const posts = await res.json();
+
+    container.innerHTML = posts.length
+      ? posts.map(({ title, summary }) => `
+        <article class="post">
+          <h3>${title}</h3>
+          <p>${summary}</p>
+        </article>`).join("")
+      : `<p>لا توجد أخبار حالياً.</p>`;
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = `<p>فشل تحميل الأخبار.</p>`;
   }
-
-  container.innerHTML = posts
-    .map(
-      ([title, snippet, link]) => `
-    <article class="post">
-      <h3>${title}</h3>
-      <p>${snippet}</p>
-      <a href="${link}" target="_blank" rel="noopener">اقرأ المزيد</a>
-    </article>`
-    )
-    .join("");
 }
 
-// تهيئة Carousel لشهادات العملاء
+// Carousel للشهادات
 function initCarousel() {
   let currentSlide = 0;
   const slides = document.querySelectorAll(".slide");
