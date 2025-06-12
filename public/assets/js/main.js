@@ -181,31 +181,13 @@ function initCarousel() {
   showSlide(currentSlide);
 }
 
-const menuIcon = document.getElementById("menu-icon");
-const navLinks = document.querySelector(".nav-links");
+function toggleMenu() {
+  document.getElementById("nav-links").classList.toggle("show");
+}
 
-menuIcon.addEventListener("click", () => {
-  navLinks.classList.toggle("open");
-});
-
-document.querySelectorAll('.nav-links a[href^="#"]').forEach((link) => {
-  link.addEventListener("click", function (e) {
-    e.preventDefault();
-    const targetId = this.getAttribute("href").substring(1);
-    const target = document.getElementById(targetId);
-
-    if (target) {
-      const offset = 50;
-      const targetPosition =
-        target.getBoundingClientRect().top + window.pageYOffset - offset;
-
-      window.scrollTo({
-        top: targetPosition,
-        behavior: "smooth",
-      });
-
-      navLinks.classList.remove("open");
-    }
+document.querySelectorAll('#nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById("nav-links").classList.remove("show");
   });
 });
 
@@ -213,11 +195,11 @@ const sections = document.querySelectorAll("section");
 const header = document.querySelector("header");
 
 header.onclick = () => {
-  navLinks.classList.remove("open");
+  navLinks.classList.remove("show");
 };
 
 sections.forEach((section) => {
   section.onclick = () => {
-    navLinks.classList.remove("open");
+    navLinks.classList.remove("show");
   };
 });

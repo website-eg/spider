@@ -11,13 +11,13 @@
       <div class="container">
         <a href="#" class="logo">Spider Gym</a>
 
-        <div id="menu-icon" class="menu-icon">
+        <div id="menu-icon" class="menu-icon" onclick="toggleMenu()">
           <span></span>
           <span></span>
           <span></span>
         </div>
 
-        <ul class="nav-links">
+        <ul class="nav-links" id="nav-links">
           <li><a href="#home">الرئيسية</a></li>
           <li><a href="#services">الخدمات</a></li>
           <li><a href="#trainers">المدربون</a></li>
@@ -32,7 +32,7 @@
 
     <header id="home" class="hero">
       <div class="container hero-content">
-        <h1>مرحبا بكم في  Spider Gym</h1>
+        <h1>مرحبا بكم في Spider Gym</h1>
         <p>أفضل نادي رياضي لتطوير لياقتك البدنية وصحتك</p>
         <a href="#contact" class="btn-primary">سجل الآن</a>
       </div>
@@ -102,12 +102,7 @@
           />
 
           <label for="tel">رقم الواتس (اختياري)</label>
-          <input
-            type="tel"
-            id="tel"
-            name="tel"
-            placeholder="01*********"
-          />
+          <input type="tel" id="tel" name="tel" placeholder="01*********" />
 
           <label for="message">الرسالة</label>
           <textarea

@@ -1,50 +1,63 @@
 body {
-      font-family: 'Tahoma', sans-serif;
-      background-color: #f0f0f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      padding: 15px;
-    }
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1e293b, #111827);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  color: #f1f5f9;
+}
 
-    .thank-you-container {
-      background-color: #fff;
-      padding: 30px 40px;
-      border-radius: 16px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      max-width: 500px;
-      width: 90%;
-    }
+.thank-you-container {
+  background: #0f172a;
+  border: 1px solid #334155;
+  padding: 40px 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  max-width: 520px;
+  width: 100%;
+  transition: transform 0.3s ease;
+}
 
-    .thank-you-container img {
-      width: 200px;
-      margin-bottom: 20px;
-    }
+.thank-you-container:hover {
+  transform: translateY(-6px);
+}
 
-    h1 {
-      color: #f9a826;
-      margin-bottom: 10px;
-    }
+.thank-you-container img {
+  width: 180px;
+  margin-bottom: 25px;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.6));
+}
 
-    p {
-      font-size: 17px;
-      color: #555;
-      margin-bottom: 25px;
-    }
+h1 {
+  font-size: 2rem;
+  color: #facc15;
+  margin-bottom: 12px;
+}
 
-    a {
-      display: inline-block;
-      text-decoration: none;
-      background-color: #f9a826;
-      color: white;
-      padding: 10px 25px;
-      border-radius: 10px;
-      transition: background-color 0.3s ease;
-    }
+p {
+  font-size: 1.1rem;
+  color: #cbd5e1;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
 
-    a:hover {
-      background-color: #f9a826;
-    }
+a {
+  display: inline-block;
+  text-decoration: none;
+  background: #facc15;
+  color: #111827;
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: bold;
+  box-shadow: 0 4px 15px rgba(250, 204, 21, 0.3);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+a:hover {
+  background: #eab308;
+  transform: scale(1.05);
+}
